@@ -9,6 +9,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        User user = new User();
-        user.setFollowed(false);
+        User user1 = new User();
+        user1.setFollowed(false);
 
         Intent receivingEnd = getIntent();
         int randomInt = receivingEnd.getIntExtra("Random integer", 0);
@@ -26,27 +28,33 @@ public class MainActivity extends AppCompatActivity {
         TextView myText =(TextView) findViewById(R.id.textView);
         String message = "MAD " + randomInt;
         myText.setText(message);
-    }
 
-    boolean followed = false;
-    public void onFollowClick (View v){
-        if (followed) {
-            Toast.makeText(getBaseContext(),"Unfollowed", Toast.LENGTH_SHORT).show();
-            Button button = (Button) findViewById(R.id.btnFollow);
-            button.setText("Follow");
-            followed = false;
+        findViewById(R.id.btnFollow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (user1.getFollowed()) {
+                    Toast.makeText(getBaseContext(),"Unfollowed", Toast.LENGTH_SHORT).show();
+                    Button button = (Button) findViewById(R.id.btnFollow);
+                    button.setText("Follow");
+                    user1.setFollowed(false);
+                }
 
-        } else {
-            Toast.makeText(getBaseContext(),"Followed", Toast.LENGTH_SHORT).show();
-            Button button = (Button) findViewById(R.id.btnFollow);
-            button.setText("Unfollow");
-            followed = true;
-        }
-    }
+                else {
+                    Toast.makeText(getBaseContext(),"Followed", Toast.LENGTH_SHORT).show();
+                    Button button = (Button) findViewById(R.id.btnFollow);
+                    button.setText("Unfollow");
+                    user1.setFollowed(true);
+                }
+            }
+        });
 
-    public void onMessageClick (View v) {
-        Intent nextActivity = new Intent(MainActivity.this, MessageGroup.class);
-        startActivity(nextActivity);
+        findViewById(R.id.btnMessage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextActivity = new Intent(MainActivity.this, MessageGroup.class);
+                startActivity(nextActivity);
+            }
+        });
     }
 
 }
