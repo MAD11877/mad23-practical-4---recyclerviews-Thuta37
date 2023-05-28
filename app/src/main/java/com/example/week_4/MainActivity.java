@@ -3,6 +3,7 @@ package com.example.week_4;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,47 +15,47 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        User user1 = new User();
-        user1.setFollowed(false);
-
-        Intent receivingEnd = getIntent();
-        int randomInt = receivingEnd.getIntExtra("Random integer", 0);
-
-        TextView myText =(TextView) findViewById(R.id.textView);
-        String message = "MAD " + randomInt;
-        myText.setText(message);
-
-        findViewById(R.id.btnFollow).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (user1.getFollowed()) {
-                    Toast.makeText(getBaseContext(),"Unfollowed", Toast.LENGTH_SHORT).show();
-                    Button button = (Button) findViewById(R.id.btnFollow);
-                    button.setText("Follow");
-                    user1.setFollowed(false);
-                }
-
-                else {
-                    Toast.makeText(getBaseContext(),"Followed", Toast.LENGTH_SHORT).show();
-                    Button button = (Button) findViewById(R.id.btnFollow);
-                    button.setText("Unfollow");
-                    user1.setFollowed(true);
-                }
-            }
-        });
-
-        findViewById(R.id.btnMessage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent nextActivity = new Intent(MainActivity.this, MessageGroup.class);
-                startActivity(nextActivity);
-            }
-        });
     }
 
+
+    User user = new User();
+    boolean followed = user.getFollowed();
+
+    public void onFollowClick(View v) {
+        if (followed) {
+            Toast.makeText(getBaseContext(), "Unfollowed", Toast.LENGTH_SHORT).show();
+            Button button = (Button) findViewById(R.id.btnFollow);
+            button.setText("FOLLOW");
+            followed = false;
+        } else {
+            Toast.makeText(getBaseContext(), "Followed", Toast.LENGTH_SHORT).show();
+            Button button = (Button) findViewById(R.id.btnFollow);
+            button.setText("UNFOLLOW");
+            followed = true;
+        }
+
+    }
+
+    public void onMessageClick(View v) {
+        // MainActivity to MessageGroup
+        Intent intent = new Intent(MainActivity.this, MessageGroup.class);
+        startActivity(intent);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        // receive data from ListActivity
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("USERNAME");
+        String description = intent.getStringExtra("DESCRIPTION");
+        TextView nametext = findViewById(R.id.textView);
+        TextView descriptiontext = findViewById(R.id.textView2);
+        nametext.setText(name);
+        descriptiontext.setText(description);
+
+    }
 }

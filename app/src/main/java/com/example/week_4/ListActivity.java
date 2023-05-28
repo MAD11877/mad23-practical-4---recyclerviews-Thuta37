@@ -2,6 +2,7 @@ package com.example.week_4;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,50 +11,57 @@ import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class ListActivity extends AppCompatActivity {
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        List<User> userList = new ArrayList<>();
+
+        for (int i = 0; i < 20; i++) {
+            User user = new User();
+
+            // Randomize the name as an integer
+            int randomName = getRandomInt(0, 10000000);
+            String name = "Name: " + randomName;
+            user.setName(name);
+
+            // Randomize the description (with integers)
+            int randomDescription = getRandomInt(0, 10000000);
+            String description = "Description: " + randomDescription;
+            user.setDescription(description);
+
+            // Randomize the value of Followed
+            boolean randomFollowed = getRandomInt(0, 1) == 1;
+            user.setFollowed(randomFollowed);
+
+            userList.add(user);
+        }
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        UserAdapter mAdapter = new UserAdapter((ArrayList<User>) userList, this);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+
 
     }
 
-
-    public void onImageClick (View v) {
-        showAlertDialog("MADness");
+    private int getRandomInt(int min, int max) {
+        Random random = new Random();
+        return random.nextInt(max - min + 1) + min;
     }
 
-    public void showAlertDialog(String message) {
-        AlertDialog dialog = new AlertDialog.Builder(ListActivity.this)
-                .setTitle("Profile")
-                .setMessage(message)
-
-                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        dialog.dismiss();
-                    }
-                })
-
-                .setPositiveButton("View", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Random random = new Random();
-                        int randomNumber = random.nextInt();
-                        Log.i(TAG, String.valueOf(randomNumber));
-                        Intent nextActivity = new Intent(ListActivity.this, MainActivity.class);
-                        nextActivity.putExtra("Random integer", randomNumber);
-                        startActivity(nextActivity);
-                        dialog.dismiss();
-                    }
-                })
-               .create();
-        dialog.show();
-    }
 }
