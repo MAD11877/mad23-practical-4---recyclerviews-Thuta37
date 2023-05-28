@@ -19,8 +19,8 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<User> userList;
     private Context context;
-    private final int VIEW_TYPE_NORMAL = 0;
-    private final int VIEW_TYPE_7 = 1;
+    private final int normal_viewtype = 0;
+    private final int viewtype_7 = 1;
 
     public UserAdapter(ArrayList<User> userList, Context context){
 
@@ -31,8 +31,8 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position){
         if (userList.get(position).getName().endsWith("7")){
-            return VIEW_TYPE_7;
-        } else return VIEW_TYPE_NORMAL;
+            return viewtype_7;
+        } else return normal_viewtype;
     }
 
     //private View.OnClickListener mOnClickListener;
@@ -42,11 +42,11 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         View view;
         switch(viewType) {
-            case VIEW_TYPE_NORMAL: {
+            case normal_viewtype: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user, parent, false);
                 return new NormalViewHolder(view);
             }
-            case VIEW_TYPE_7: {
+            case viewtype_7: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user7, parent, false);
                 return new SpecialViewHolder(view);
             }
@@ -59,7 +59,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch(holder.getItemViewType()){
-            case VIEW_TYPE_NORMAL: {
+            case normal_viewtype: {
                 NormalViewHolder normalViewHolder = (NormalViewHolder) holder;
                 String name = userList.get(position).getName();
                 String description = userList.get(position).getDescription();
@@ -68,7 +68,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             }
 
-            case VIEW_TYPE_7:{
+            case viewtype_7:{
                 SpecialViewHolder specialViewHolder = (SpecialViewHolder) holder;
                 String name = userList.get(position).getName();
                 String description = userList.get(position).getDescription();
@@ -139,6 +139,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         // Pass any necessary data to the profile activity using intent extras
                         intent.putExtra("USERNAME", user.getName());
                         intent.putExtra("DESCRIPTION", user.getDescription());
+                        intent.putExtra("FOLLOWED", user.getFollowed());
                         context.startActivity(intent);
                     }
                 })

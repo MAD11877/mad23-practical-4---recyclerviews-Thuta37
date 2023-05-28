@@ -52,10 +52,18 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String name = intent.getStringExtra("USERNAME");
         String description = intent.getStringExtra("DESCRIPTION");
+        followed = intent.getBooleanExtra("FOLLOWED", false);
         TextView nametext = findViewById(R.id.textView);
         TextView descriptiontext = findViewById(R.id.textView2);
+        Button folllowbutton = findViewById(R.id.btnFollow);
         nametext.setText(name);
         descriptiontext.setText(description);
+
+        if (followed) {
+            folllowbutton.setText("UNFOLLOW");
+        } else {
+            folllowbutton.setText("FOLLOW");
+        }
 
     }
 }
